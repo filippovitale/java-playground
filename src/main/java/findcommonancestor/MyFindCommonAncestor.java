@@ -6,6 +6,12 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
     public String findCommmonAncestor(String[] commitHashes, String[][] parentHashes,
                                       String commitHash1, String commitHash2) {
 
+        Map<String, LinkedHashSet<String>> graph = createCommitHashesGraph(commitHashes, parentHashes, commitHash1, commitHash2);
+
+        return mostRecentCommonAncestor(graph, commitHash1, commitHash2);
+    }
+
+    private static Map<String, LinkedHashSet<String>> createCommitHashesGraph(String[] commitHashes, String[][] parentHashes, String commitHash1, String commitHash2) {
         int N = commitHashes.length;
         Map<String, LinkedHashSet<String>> graph = new HashMap<String, LinkedHashSet<String>>(N);
 
@@ -14,10 +20,8 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
         int i = N - 1;
         while (i >= 0 && !(commitHash1Found && commitHash2Found)) {
             String commit = commitHashes[i];
-
-            if (commitHash1.equals(commitHashes[i])) commitHash1Found = true;
-            if (commitHash2.equals(commitHashes[i])) commitHash2Found = true;
-
+            if (commitHash1.equals(commit)) commitHash1Found = true;
+            if (commitHash2.equals(commit)) commitHash2Found = true;
 
             String[] parents = parentHashes[i];
             LinkedHashSet<String> commitListTrail;
@@ -33,11 +37,12 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
             commitListTrail.add(commit);
             graph.put(commit, commitListTrail);
 
-            System.out.println("[" + i + "]=" + commit + " " + commitListTrail);
             i--;
         }
+        return graph;
+    }
 
-        System.out.println("-------------------------------------------------");
+    private static String mostRecentCommonAncestor(Map<String, LinkedHashSet<String>> graph, String commitHash1, String commitHash2) {
 
         LinkedHashSet<String> commmitHash1Trail = graph.get(commitHash1);
         String[] ancestors = new String[commmitHash1Trail.size()];
