@@ -9,29 +9,27 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
         int N = commitHashes.length;
         Map<String, LinkedHashSet<String>> graph = new HashMap<String, LinkedHashSet<String>>(N);
 
-        String rootCommit = commitHashes[N - 1];
-
-        LinkedHashSet<String> rootListTrail = new LinkedHashSet<String>();
-        rootListTrail.add(rootCommit);
-
-        graph.put(rootCommit, rootListTrail);
-
         boolean commitHash1Found = false;
         boolean commitHash2Found = false;
-        int i = N - 2; // TODO try integrate into the main loop
+        int i = N - 1;
         while (i >= 0 && !(commitHash1Found && commitHash2Found)) {
             String commit = commitHashes[i];
-            String[] parents = parentHashes[i];
 
             if (commitHash1.equals(commitHashes[i])) commitHash1Found = true;
             if (commitHash2.equals(commitHashes[i])) commitHash2Found = true;
 
-            //for (String parent : parents){
-            //System.out.println("parent " + parent);
-            //}
-            // TODO assuming only one parent
-            String parent = parents[0];
-            LinkedHashSet<String> commitListTrail = new LinkedHashSet<String>(graph.get(parent));
+
+            String[] parents = parentHashes[i];
+            LinkedHashSet<String> commitListTrail;
+            if (parents == null) {
+                commitListTrail = new LinkedHashSet<String>();
+            } else {
+                //for (String parent : parents){
+                //System.out.println("parent " + parent);
+                //}
+                // TODO assuming only one parent
+                commitListTrail = new LinkedHashSet<String>(graph.get(parents[0]));
+            }
             commitListTrail.add(commit);
             graph.put(commit, commitListTrail);
 
