@@ -6,14 +6,18 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
     public String findCommmonAncestor(String[] commitHashes, String[][] parentHashes,
                                       String commitHash1, String commitHash2) {
 
-        Map<String, LinkedHashSet<String>> graph = createCommitHashesGraph(commitHashes, parentHashes, commitHash1, commitHash2);
+        Map<String, List<LinkedHashSet<String>>> graph;
+        graph = createCommitHashesGraph(commitHashes, parentHashes, commitHash1, commitHash2);
 
         return mostRecentCommonAncestor(graph, commitHash1, commitHash2);
     }
 
-    private static Map<String, LinkedHashSet<String>> createCommitHashesGraph(String[] commitHashes, String[][] parentHashes, String commitHash1, String commitHash2) {
+    private static Map<String, List<LinkedHashSet<String>>> createCommitHashesGraph(String[] commitHashes,
+                                                                                    String[][] parentHashes,
+                                                                                    String commitHash1,
+                                                                                    String commitHash2) {
         int N = commitHashes.length;
-        Map<String, LinkedHashSet<String>> graph = new HashMap<String, LinkedHashSet<String>>(N);
+        Map<String, List<LinkedHashSet<String>>> graph = new HashMap<String, List<LinkedHashSet<String>>>(N);
 
         boolean commitHash1Found = false;
         boolean commitHash2Found = false;
@@ -24,41 +28,57 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
             if (commitHash2.equals(commit)) commitHash2Found = true;
 
             String[] parents = parentHashes[i];
+            List<LinkedHashSet<String>> commitListTrails = new LinkedList<LinkedHashSet<String>>();
+
             LinkedHashSet<String> commitListTrail;
             if (parents == null) {
                 commitListTrail = new LinkedHashSet<String>();
-            } else {
-                //for (String parent : parents){
-                //System.out.println("parent " + parent);
-                //}
-                // TODO assuming only one parent
-                commitListTrail = new LinkedHashSet<String>(graph.get(parents[0]));
-            }
-            commitListTrail.add(commit);
-            graph.put(commit, commitListTrail);
+                commitListTrail.add(commit);
 
+                commitListTrails.add(commitListTrail);
+            } else {
+                for (String parent : parents) {
+                    List<LinkedHashSet<String>> parentListTrails = graph.get(parent);
+                    for (LinkedHashSet<String> parentListTrail : parentListTrails) {
+                        commitListTrail = new LinkedHashSet<String>(parentListTrail);
+                        commitListTrail.add(commit);
+                        commitListTrails.add(commitListTrail);
+                    }
+                }
+            }
+
+            graph.put(commit, commitListTrails);
             i--;
         }
         return graph;
     }
 
-    private static String mostRecentCommonAncestor(Map<String, LinkedHashSet<String>> graph, String commitHash1, String commitHash2) {
+    private static String mostRecentCommonAncestor(Map<String, List<LinkedHashSet<String>>> graph,
+                                                   String commitHash1, String commitHash2) {
 
-        LinkedHashSet<String> commmitHash1Trail = graph.get(commitHash1);
-        String[] ancestors = new String[commmitHash1Trail.size()];
-        commmitHash1Trail.toArray(ancestors);
+        String ancestorFound = null;
+        int maxCommitCount = Integer.MAX_VALUE;
+        for (LinkedHashSet<String> commmitHash1Trail : graph.get(commitHash1)) {
+            String[] ancestors = new String[commmitHash1Trail.size()];
+            commmitHash1Trail.toArray(ancestors);
 
-        LinkedHashSet<String> commmitHash2Trail = graph.get(commitHash2);
-        int j = ancestors.length - 1;
-        while (j >= 0) {
-            String ancestor = ancestors[j];
-            if (commmitHash2Trail.contains(ancestor)) {
-                return ancestor;
+            for (LinkedHashSet<String> commmitHash2Trail : graph.get(commitHash2)) {
+                int j = ancestors.length - 1;
+                while (j >= 0) {
+                    String ancestor = ancestors[j];
+                    if (commmitHash2Trail.contains(ancestor)) {
+                        int commitCount = ancestors.length - j;
+                        if (commitCount < maxCommitCount) {
+                            ancestorFound = ancestor;
+                            maxCommitCount = commitCount;
+                        }
+                    }
+                    j--;
+                }
             }
-            j--;
         }
 
-        return null;
+        return ancestorFound;
     }
 
 }
