@@ -15,18 +15,19 @@ public class MyFlattenTree<T> implements FlattenTree<T> {
         return result;
     }
 
+    private Function<T,T> getLeafFunction = new MyFunction<T, T>();
+    private Function<Triple<Tree<T>>, Triple<Tree<T>>> getNodeFunction = new MyFunction<Triple<Tree<T>>, Triple<Tree<T>>>();
+
     private void inOrderTraverse(Tree<T> tree, List<T> result) {
         Either<T, Triple<Tree<T>>> LeafOrNode = tree.get();
         boolean isLeaf = LeafOrNode.isLeft();
 
-        Function<T,T> getLeaf = new MyFunction<T, T>();
-
         if (isLeaf) {
-            result.add(LeafOrNode.ifLeft(getLeaf));
+            result.add(LeafOrNode.ifLeft(getLeafFunction));
         } else {
-            inOrderTraverse(LeafOrNode.ifRight(new MyFunction<Triple<Tree<T>>, Triple<Tree<T>>>()).left(), result);
-            inOrderTraverse(LeafOrNode.ifRight(new MyFunction<Triple<Tree<T>>, Triple<Tree<T>>>()).middle(), result);
-            inOrderTraverse(LeafOrNode.ifRight(new MyFunction<Triple<Tree<T>>, Triple<Tree<T>>>()).right(), result);
+            inOrderTraverse(LeafOrNode.ifRight(getNodeFunction).left(), result);
+            inOrderTraverse(LeafOrNode.ifRight(getNodeFunction).middle(), result);
+            inOrderTraverse(LeafOrNode.ifRight(getNodeFunction).right(), result);
         }
 
     }
