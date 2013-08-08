@@ -11,13 +11,13 @@ public class MyFolder<T, U> implements Folder<T, U> {
             return u;
         }
 
-        // The recursive implementation will overflow the stack for
-        // any data set of real size, your job is to implement a
-        // non-recursive solution
-        return fold(function.apply(ts.poll(), u), ts, function);
-        //return null;
+        T[] tsArray = (T[]) new Object[ts.size()];
+        ts.toArray(tsArray);
 
-
-//        I want to use t.iterator()
+        U acc = u;
+        for (int i = 0; i < tsArray.length; i++) {
+            acc = function.apply(tsArray[i], acc);
+        }
+        return acc;
     }
 }
