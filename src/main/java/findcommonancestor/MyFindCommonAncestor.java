@@ -19,6 +19,7 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
         int N = commitHashes.length;
         Map<String, List<LinkedHashSet<String>>> graph = new HashMap<String, List<LinkedHashSet<String>>>(N);
 
+        // graph creation end when commitHash1 and commitHash2 are found
         boolean commitHash1Found = false;
         boolean commitHash2Found = false;
         int i = N - 1;
@@ -32,14 +33,13 @@ public class MyFindCommonAncestor implements FindCommonAncestor {
 
             LinkedHashSet<String> commitListTrail;
             if (parents == null) {
+                // the "root commit" has null parents
                 commitListTrail = new LinkedHashSet<String>();
                 commitListTrail.add(commit);
-
                 commitListTrails.add(commitListTrail);
             } else {
                 for (String parent : parents) {
-                    List<LinkedHashSet<String>> parentListTrails = graph.get(parent);
-                    for (LinkedHashSet<String> parentListTrail : parentListTrails) {
+                    for (LinkedHashSet<String> parentListTrail : graph.get(parent)) {
                         commitListTrail = new LinkedHashSet<String>(parentListTrail);
                         commitListTrail.add(commit);
                         commitListTrails.add(commitListTrail);
