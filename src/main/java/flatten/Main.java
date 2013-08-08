@@ -29,6 +29,9 @@ public class Main {
 
         System.out.println(new MyFlattenTree<Integer>().flattenInOrder(tree));
 
+//        System.out.println("------------------------------------------------");
+//        System.out.println(new MyFlattenTree<Integer>().flattenInOrder(null));
+
     }
 
 }
