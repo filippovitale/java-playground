@@ -1,5 +1,6 @@
 package iteration;
 
+import java.util.Iterator;
 import java.util.Queue;
 
 public class MyFolder<T, U> implements Folder<T, U> {
@@ -11,12 +12,14 @@ public class MyFolder<T, U> implements Folder<T, U> {
             return u;
         }
 
-        T[] tsArray = (T[]) new Object[ts.size()];
-        ts.toArray(tsArray);
+        if (true)
+            return fold(function.apply(ts.poll(), u), ts, function);
+
+        Iterator<T> tsIterator = ts.iterator();
 
         U acc = u;
-        for (int i = 0; i < tsArray.length; i++) {
-            acc = function.apply(tsArray[i], acc);
+        while (tsIterator.hasNext()) {
+            acc = function.apply(tsIterator.next(), acc);
         }
         return acc;
     }
