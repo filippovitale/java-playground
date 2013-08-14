@@ -45,6 +45,16 @@ public class MyFolderTest {
     }
 
     @Test
+    public void testQueueOrder() throws Exception {
+        String acc = "";
+        for (String e: b) {
+            acc = acc + " " + e;
+        }
+
+        assertEquals("D C B A", acc);
+    }
+
+    @Test
     public void testWrongInput() throws Exception {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("All the input parameters must be not null");
