@@ -11,7 +11,7 @@ public class PC1 {
     public static void main(String args[]) {
 
         //Creating shared object
-        BlockingQueue sharedQueue = new LinkedBlockingQueue();
+        BlockingQueue<Integer> sharedQueue = new LinkedBlockingQueue<Integer>();
 
         //Creating Producer and Consumer Thread
         Thread prodThread = new Thread(new Producer(sharedQueue));
@@ -27,9 +27,9 @@ public class PC1 {
 //Producer Class in java
 class Producer implements Runnable {
 
-    private final BlockingQueue sharedQueue;
+    private final BlockingQueue<Integer> sharedQueue;
 
-    public Producer(BlockingQueue sharedQueue) {
+    public Producer(BlockingQueue<Integer> sharedQueue) {
         this.sharedQueue = sharedQueue;
     }
 
@@ -50,9 +50,9 @@ class Producer implements Runnable {
 //Consumer Class in Java
 class Consumer implements Runnable {
 
-    private final BlockingQueue sharedQueue;
+    private final BlockingQueue<Integer> sharedQueue;
 
-    public Consumer(BlockingQueue sharedQueue) {
+    public Consumer(BlockingQueue<Integer> sharedQueue) {
         this.sharedQueue = sharedQueue;
     }
 
