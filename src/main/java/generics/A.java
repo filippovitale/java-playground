@@ -1,5 +1,6 @@
 package generics;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,22 @@ public class A {
         Object o = leb.get(0); // OK
     }
 
+    // http://www.ibm.com/developerworks/java/library/j-jtp04298/index.html
+    public void reList(List<?> list) {
+        Object e = list.get(0);
+//        list.add(e); // NO! List<?> --> List<Object>
+    }
+
+    private <E> void reListWithCaptureHelper(List<E> list) {
+        E e = list.get(0);
+        list.add(e); // OK
+    }
+
+    public static <T> T identity(T arg) {
+        return arg;
+    }
+
+
     public static void main(String[] args) {
 
         superCanAdd(new ArrayList<A>()); // OK
@@ -41,6 +58,22 @@ public class A {
         extentsCanGet(new ArrayList<B>()); // OK
         extentsCanGet(new ArrayList<C>()); // OK
 
+        Integer i = 3;
+        Integer identityI = identity(i);
+        System.out.println(identityI);
+        Number identityN = identity(i);
+        System.out.println(identityN);
+        Serializable identityS = identity(i);
+        System.out.println(identityS);
+        Object identityO = identity(i);
+        System.out.println(identityO);
+
+// http://www.javacodegeeks.com/2011/04/java-generics-quick-tutorial.html
+        List<Apple> apples = new ArrayList<Apple>();
+//        List<Fruit> fruits = apples; // NO!
+        List<? extends Fruit> fruits = apples; // OK
+//        fruits.add(new Strawberry()); // NO!
+
     }
 
 }
@@ -50,3 +83,14 @@ class B extends A {
 
 class C extends B {
 }
+
+
+class Fruit {
+}
+
+class Apple extends Fruit {
+}
+
+class Strawberry extends Fruit {
+}
+
