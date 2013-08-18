@@ -1,11 +1,10 @@
 package executor2;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Vector;
-import java.util.concurrent.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class FutureCallable {
 
