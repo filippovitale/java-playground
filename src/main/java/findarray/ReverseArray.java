@@ -28,4 +28,11 @@ public class ReverseArray {
         Collections.reverse(listToReverse);
         return listToReverse;
     }
+
+    public static List reverseListOld(List inputList) {
+        List listToReverseOld = new ArrayList(inputList);
+        List<String> listToReverseGeneric = (List<String>) listToReverseOld;
+        Collections.reverse(listToReverseGeneric);
+        return listToReverseOld;
+    }
 }

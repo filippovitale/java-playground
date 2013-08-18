@@ -39,4 +39,14 @@ public class ReverseArrayTest {
 //        assertSame(Arrays.asList(new Integer[]{3, 2, 1}), reversedList); // NO!
         assertThat(reversedList, is(Arrays.asList(new Integer[]{3, 2, 1})));
     }
+
+    @Test
+    public void shouldReturnAReversedListOld() {
+        Integer[] integers = new Integer[]{1, 2, 3};
+        List<Integer> integerList = Arrays.asList(integers);
+
+        List<Integer> reversedList = ReverseArray.reverseListOld(integerList);
+//        assertSame(Arrays.asList(new Integer[]{3, 2, 1}), reversedList); // NO!
+        assertThat(reversedList, is(Arrays.asList(new Integer[]{3, 2, 1})));
+    }
 }
