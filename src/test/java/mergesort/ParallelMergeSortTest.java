@@ -12,4 +12,9 @@ public class ParallelMergeSortTest {
         ParallelMergeSort.sort(a1);
         assertNotNull(a1);
     }
+
+    private class ParallelMergeSortTestable extends ParallelMergeSort{
+        // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // new methods testable
+    }
 }
