@@ -2,14 +2,11 @@ package concurrent;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 // http://javarevisited.blogspot.com.au/2012/02/producer-consumer-design-pattern-with.html
 public class PC1 {
 
     public static void main(String args[]) {
-
         //Creating shared object
         BlockingQueue<Integer> sharedQueue = new LinkedBlockingQueue<Integer>();
 
@@ -39,8 +36,9 @@ class Producer implements Runnable {
             try {
                 System.out.println("Produced: " + i);
                 sharedQueue.put(i);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("InterruptedException: " + ex);
             }
         }
     }
@@ -62,7 +60,7 @@ class Consumer implements Runnable {
             try {
                 System.out.println("Consumed: " + sharedQueue.take());
             } catch (InterruptedException ex) {
-                Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("InterruptedException: " + ex);
             }
         }
     }
