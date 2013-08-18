@@ -14,23 +14,47 @@ public class FutureCallable {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
+        List<Future<String>> futures = ExecuteParallelOrdered();
+
+        System.out.println("Waiting for the futures (in order)");
+        for (Future<String> future : futures) {
+            System.out.println(future.get());
+        }
+
+        CompletionService<String> completionService = ExecuteParallelNotInOrder();
+        System.out.println("Waiting for the futures (*not* in order)");
+        for (int i = 0; i < NUMBER_OF_TASKS; i++) {
+            Future<String> future = completionService.take();
+            System.out.println(future.get());
+        }
+    }
+
+    private static List<Future<String>> ExecuteParallelOrdered() throws InterruptedException, ExecutionException {
         List<Future<String>> futures = new ArrayList<Future<String>>(NUMBER_OF_TASKS);
 
         System.out.println("Submitting the tasks");
-
         for (int i = 0; i < NUMBER_OF_TASKS; i++) {
             MyCallable myCallable = new MyCallable(i);
             Future<String> future = e.submit(myCallable);
             futures.add(future);
         }
 
-        System.out.println("Waiting for the futures (in order)");
+        return futures;
+    }
 
-        for (Future<String> future : futures){
-            System.out.println(future.get());
+    private static CompletionService<String> ExecuteParallelNotInOrder() throws InterruptedException, ExecutionException {
+        CompletionService<String> compService = new ExecutorCompletionService<String>(e);
+        for (int i = 0; i < NUMBER_OF_TASKS; i++) {
+            MyCallable myCallable = new MyCallable(i);
+            compService.submit(myCallable);
         }
 
-        e.shutdown();
+        return compService;
+
+//        for (int idx = 0; idx < URLs.size(); ++idx) {
+//            Future<PingResult> future = compService.take();
+//            log(future.get());
+//        }
     }
 }
 
