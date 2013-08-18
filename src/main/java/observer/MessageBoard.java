@@ -35,7 +35,8 @@ class Student implements Observer {
     }
 
     public void update(Observable o, Object arg) {
+        String message = (String) arg;
         int numberOfOtherObservers = o.countObservers() - 1;
-        System.out.printf("\"%s\" observed that: \"%s\" with other %d people%n", name, arg, numberOfOtherObservers);
+        System.out.printf("\"%s\" observed that: \"%s\" with other %d people%n", name, message, numberOfOtherObservers);
     }
 }
